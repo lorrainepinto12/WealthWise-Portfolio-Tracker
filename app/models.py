@@ -15,7 +15,8 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
-    transactions = relationship("Transaction", back_populates="user")
+ # Cascade delete ensures transactions are deleted when user is deleted
+    transactions = relationship("Transaction", back_populates="user", cascade="all, delete")
 
 # Transaction table
 class Transaction(Base):
