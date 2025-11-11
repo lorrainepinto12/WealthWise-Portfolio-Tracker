@@ -7,7 +7,7 @@ router = APIRouter(
     prefix="/transactions",
     tags=["Transactions"]
 )
-
+#Add a transaction
 @router.post("/", response_model=schemas.Transaction, summary="Add a transaction", description="Record a BUY or SELL transaction") 
 def add_transaction(transaction: schemas.TransactionCreate, db: Session = Depends(get_db)):
     """
@@ -16,6 +16,7 @@ def add_transaction(transaction: schemas.TransactionCreate, db: Session = Depend
       1. User exists
       2. SELL transactions do not exceed holdings
       3. Symbol is valid
+      4. Transaction type is valid
     """
  
     # Check if user exists
@@ -28,6 +29,7 @@ def add_transaction(transaction: schemas.TransactionCreate, db: Session = Depend
     mock_prices = load_mock_prices()
     if transaction.symbol not in mock_prices:
         raise HTTPException(status_code=400, detail=f"Invalid symbol: {transaction.symbol}")
+    
     # Validate transaction type
     if transaction.type not in ["BUY", "SELL"]:
         raise HTTPException(status_code=400, detail=f"Invalid transaction type: {transaction.type}. Must be 'BUY' or 'SELL'.")
@@ -38,7 +40,7 @@ def add_transaction(transaction: schemas.TransactionCreate, db: Session = Depend
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-
+#Get transaction by user_id
 @router.get("/{user_id}", response_model=list[schemas.Transaction], summary="Get user transactions", description="Fetch all transactions for a specific user")
 def get_transactions(user_id: int, db: Session = Depends(get_db)):
     """
@@ -51,8 +53,9 @@ def get_transactions(user_id: int, db: Session = Depends(get_db)):
     transactions = crud.get_transactions_by_user(db, user_id)
     return transactions
 
-#  New route: Get all transactions (for admin or debugging)
+# Get all transactions (for admin or debugging)
 @router.get("/", response_model=list[schemas.Transaction], summary="Get all transactions", description="Fetch every transaction (admin/debugging use)")
 def get_all_transactions(db: Session = Depends(get_db)):
     transactions = db.query(models.Transaction).all()
     return transactions
+

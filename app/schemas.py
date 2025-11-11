@@ -3,7 +3,7 @@ from datetime import date
 from enum import Enum
 from typing import List
 
-# ---------- User Schemas ----------
+#User Schemas 
 class UserBase(BaseModel):
     name: str
     email: EmailStr
@@ -34,7 +34,7 @@ class User(UserBase):
         }
     }
 
-# ---------- Transaction Schemas ----------
+#Transaction Schemas
 class TransactionType(str, Enum):
     BUY = "BUY"
     SELL = "SELL"
@@ -81,7 +81,7 @@ class Transaction(TransactionBase):
         }
     }
 
-# ---------- Portfolio Summary Schema ----------
+#Portfolio Summary Schema
 class Holding(BaseModel):
     symbol: str
     units: float
