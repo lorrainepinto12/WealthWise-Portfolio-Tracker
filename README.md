@@ -115,8 +115,7 @@ The application will be live at: **[http://127.0.0.1:8000](http://127.0.0.1:8000
 FastAPI automatically generates interactive API documentation:
 
   * **Swagger UI** → `http://127.0.0.1:8000/docs`
-  * **ReDoc** → `http://127.0.0.1:8000/redoc`
-
+    
 -----
 Here is the improved structure for the "Example API Calls" section, using clear headings and code blocks for readability, similar to standard API documentation.
 
