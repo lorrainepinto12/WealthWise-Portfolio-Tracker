@@ -439,28 +439,39 @@ GET /portfolio/summary?user_id=1
 
 ```json
 {
-  "user_id": 1,
-  "portfolio": [
-    {
-      "symbol": "TCS",
-      "units": 3,
-      "avg_cost": 3200,
-      "current_price": 3450,
-      "unrealized_gain": 750,
-      "profit_loss_percent": 7.8
-    },
-    {
-      "symbol": "INFY",
-      "units": 10,
-      "avg_cost": 1500,
-      "current_price": 1580,
-      "unrealized_gain": 800,
-      "profit_loss_percent": 5.3
-    }
-  ],
-  "total_invested": 24600,
-  "total_current_value": 26200,
-  "total_profit_loss": 1600
+    "user_id": 1,
+    "holdings": [
+        {
+            "symbol": "TCS",
+            "units": 1.0,
+            "avg_cost": 3200.0,
+            "current_price": 3400.0,
+            "unrealized_pl": 200.0
+        },
+        {
+            "symbol": "INFY",
+            "units": 5.0,
+            "avg_cost": 1500.0,
+            "current_price": 1500.0,
+            "unrealized_pl": 0.0
+        },
+        {
+            "symbol": "HDFC",
+            "units": 6.0,
+            "avg_cost": 2500.0,
+            "current_price": 2500.0,
+            "unrealized_pl": 0.0
+        },
+        {
+            "symbol": "HUL",
+            "units": 4.0,
+            "avg_cost": 2800.0,
+            "current_price": 2800.0,
+            "unrealized_pl": 0.0
+        }
+    ],
+    "total_value": 37100.0,
+    "total_gain": 200.0
 }
 ```
 
