@@ -125,174 +125,343 @@ Below are example requests to demonstrate the core functionality of the API. Ass
 
 -----
 
-## 1\. Create a User
+## **1. Users**
 
-  * **Endpoint:** `POST /users/`
+### **1.1 Create User**
 
-### Request Body (JSON)
+**POST** `/users`
 
-```json
-{
-  "name": "Lorraine Pinto",
-  "email": "lorraine@example.com"
-}
-```
+**Description:** Create a new user in the system.
 
-### Response (JSON)
+
+
+**Request Body**
 
 ```json
 {
-  "id": 1,
-  "name": "Lorraine Pinto",
-  "email": "lorraine@example.com"
+  "name": "Test User",
+  "email": "testuser@example.com"
 }
 ```
 
------
+**Response**
 
-## 2\. Get All Users
+```json
+{
+  "id": 8,
+  "name": "Test User",
+  "email": "testuser@example.com"
+}
+```
 
-  * **Endpoint:** `GET /users/`
+---
 
-### Request
+### **1.2 Get All Users**
 
-*No body required.*
+**GET** `/users`
 
-### Response (JSON)
+**Description:** Fetch all registered users.
+
+**Response**
 
 ```json
 [
   {
     "id": 1,
-    "name": "Lorraine Pinto",
-    "email": "lorraine@example.com"
+    "name": "John Doe",
+    "email": "john@example.com"
+  },
+  {
+    "id": 2,
+    "name": "Jane Doe",
+    "email": "jane@example.com"
   }
 ]
 ```
 
------
+---
 
-## 3\. Add a Buy Transaction
+### **1.3 Get User by ID**
 
-  * **Endpoint:** `POST /transactions/`
+**GET** `/users/{user_id}`
 
-### Request Body (JSON)
+**Description:** Retrieve details for a specific user by ID.
 
-```json
-{
-  "user_id": 1,
-  "symbol": "AAPL",
-  "type": "BUY",
-  "quantity": 5,
-  "price": 180.5
-}
+**Example**
+
+```
+GET /users/2
 ```
 
-### Response (JSON)
-
-```json
-{
-  "id": 1,
-  "user_id": 1,
-  "symbol": "AAPL",
-  "type": "BUY",
-  "quantity": 5,
-  "price": 180.5,
-  "timestamp": "2025-11-11T10:23:45"
-}
-```
-
------
-
-## 4\. Add a Sell Transaction
-
-  * **Endpoint:** `POST /transactions/`
-
-### Request Body (JSON)
-
-```json
-{
-  "user_id": 1,
-  "symbol": "AAPL",
-  "type": "SELL",
-  "quantity": 2,
-  "price": 190.0
-}
-```
-
-### Response (JSON)
+**Response**
 
 ```json
 {
   "id": 2,
-  "user_id": 1,
-  "symbol": "AAPL",
-  "type": "SELL",
-  "quantity": 2,
-  "price": 190.0,
-  "timestamp": "2025-11-11T10:28:12"
+  "name": "Jane Doe",
+  "email": "jane@example.com"
 }
 ```
 
------
+---
 
-## 5\. Get Portfolio Summary
+### **1.4 Get User by ID (User Not Found)**
 
-  * **Endpoint:** `GET /portfolio/summary?user_id=1`
+**Example**
 
-### Query Parameter
+```
+GET /users/12
+```
 
-  * `user_id=1`
+**Response**
 
-### Response (JSON)
+```json
+{
+  "detail": "User not found"
+}
+```
+
+---
+
+## **2. Transactions**
+
+### **2.1 Create BUY Transaction**
+
+**POST** `/transactions`
+
+**Description:** Record a BUY transaction for a user.
+
+**Request Body**
+
+```json
+{
+  "user_id": 8,
+  "symbol": "TCS",
+  "type": "BUY",
+  "units": 5,
+  "price": 3200,
+  "date": "2025-11-10"
+}
+```
+
+**Response**
+
+```json
+{
+  "id": 15,
+  "user_id": 8,
+  "symbol": "TCS",
+  "type": "BUY",
+  "units": 5,
+  "price": 3200,
+  "date": "2025-11-10"
+}
+```
+
+---
+
+### **2.2 Create SELL Transaction (Valid)**
+
+**POST** `/transactions`
+
+**Description:** Record a valid SELL transaction for a user.
+
+**Request Body**
+
+```json
+{
+  "user_id": 8,
+  "symbol": "TCS",
+  "type": "SELL",
+  "units": 2,
+  "price": 3400,
+  "date": "2025-05-15"
+}
+```
+
+**Response**
+
+```json
+{
+  "id": 16,
+  "user_id": 8,
+  "symbol": "TCS",
+  "type": "SELL",
+  "units": 2,
+  "price": 3400,
+  "date": "2025-05-15"
+}
+```
+
+---
+
+### **2.3 Create SELL Transaction (Exceeds Holdings)**
+
+**Request Body**
+
+```json
+{
+  "user_id": 8,
+  "symbol": "TCS",
+  "type": "SELL",
+  "units": 100,
+  "price": 3400,
+  "date": "2025-05-15"
+}
+```
+
+**Response**
+
+```json
+{
+  "detail": "Not enough units to sell for symbol: TCS"
+}
+```
+
+---
+
+### **2.4 Invalid Symbol**
+
+**Request Body**
 
 ```json
 {
   "user_id": 1,
-  "total_invested": 902.5,
-  "current_value": 950.0,
-  "total_profit_loss": 47.5,
-  "holdings": [
-    {
-      "symbol": "AAPL",
-      "quantity": 3,
-      "average_cost": 180.5,
-      "current_price": 190.0,
-      "profit_loss": 28.5
-    }
-  ]
+  "symbol": "INVALID",
+  "type": "BUY",
+  "units": 1,
+  "price": 100,
+  "date": "2025-05-10"
 }
 ```
 
------
+**Response**
 
-## 6\. Get All Transactions for a User
+```json
+{
+  "detail": "Invalid symbol: INVALID"
+}
+```
 
-  * **Endpoint:** `GET /transactions/{user_id}`
+---
 
-### Query Parameter
+### **2.5 Invalid Transaction Type**
 
-  * `user_id=1`
+**Request Body**
 
-### Response (JSON)
+```json
+{
+  "user_id": 1,
+  "symbol": "TCS",
+  "type": "NEITHER",
+  "units": 1,
+  "price": 100,
+  "date": "2025-05-10"
+}
+```
+
+**Response**
+
+```json
+{
+  "detail": "Invalid transaction type: NEITHER. Must be 'BUY' or 'SELL'."
+}
+```
+
+---
+
+### **2.6 Get Transactions by User**
+
+**GET** `/transactions/{user_id}`
+
+**Example**
+
+```
+GET /transactions/8
+```
+
+**Response**
 
 ```json
 [
   {
-    "id": 1,
-    "symbol": "AAPL",
+    "id": 15,
+    "user_id": 8,
+    "symbol": "TCS",
     "type": "BUY",
-    "quantity": 5,
-    "price": 180.5
+    "units": 5,
+    "price": 3200,
+    "date": "2025-11-10"
   },
   {
-    "id": 2,
-    "symbol": "AAPL",
+    "id": 16,
+    "user_id": 8,
+    "symbol": "TCS",
     "type": "SELL",
-    "quantity": 2,
-    "price": 190.0
+    "units": 2,
+    "price": 3400,
+    "date": "2025-05-15"
   }
 ]
 ```
------
+
+---
+
+### **2.7 Get Transactions (User Not Found)**
+
+```
+GET /transactions/15
+```
+
+**Response**
+
+```json
+{
+  "detail": "User not found"
+}
+```
+
+---
+
+## **3. Portfolio**
+
+### **3.1 Get Portfolio Summary**
+
+**GET** `/portfolio/summary?user_id={user_id}`
+
+**Example**
+
+```
+GET /portfolio/summary?user_id=1
+```
+
+**Response**
+
+```json
+{
+  "user_id": 1,
+  "portfolio": [
+    {
+      "symbol": "TCS",
+      "units": 3,
+      "avg_cost": 3200,
+      "current_price": 3450,
+      "unrealized_gain": 750,
+      "profit_loss_percent": 7.8
+    },
+    {
+      "symbol": "INFY",
+      "units": 10,
+      "avg_cost": 1500,
+      "current_price": 1580,
+      "unrealized_gain": 800,
+      "profit_loss_percent": 5.3
+    }
+  ],
+  "total_invested": 24600,
+  "total_current_value": 26200,
+  "total_profit_loss": 1600
+}
+```
+
 
